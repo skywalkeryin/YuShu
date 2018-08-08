@@ -8,5 +8,7 @@
 
 '''
 
+# All variables must be capital in the config file
 
-DEBUG = True
+PER_PAGE = 15
+
