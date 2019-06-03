@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+   Hello World.
+
+ {{data.name}} {{data.age}}
+ {{ b.b }}
+{% if data.age < 18 %}
+    <h1> {{data.name}}</h1>
+{% else %}
+        <h1 style="color: red"> {{data.name}}</h1>
+{% endif %}
+
+{% for foo in [1,3,2] %}
+    {{ foo }}
+{% endfor %}
+
+{% for key, value in data.items() %}
+    {{ key }} {{ value }}
+{% endfor %}
+
+
+</body>
+</html>

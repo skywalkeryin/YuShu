@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 
 from app.forms.book import SearchForm
 from app.libs.helper import is_isbn_or_key
@@ -9,6 +9,22 @@ import json
 
 from . import web
 
+
+class testObj:
+    pass
+
+@web.route('/test')
+def test():
+
+   r = {
+       'name' : 'yin',
+       'age' : 18
+   }
+
+   b = testObj()
+   b.b = 3
+
+   return  render_template('test.html', data = r, b = b)
 
 
 @web.route('/book/search')

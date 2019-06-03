@@ -8,8 +8,11 @@ from flask import Blueprint
 # for example:  static_folder='test/statics' ,the url will be statics
 # Only you set up the static_folder, then the static_url_path will take affect.
 
+# web = Blueprint('web', __name__, static_folder='statics', static_url_path='/web/statics')
+
+
 # BluePrint
-web = Blueprint('web', __name__, static_folder='statics', static_url_path='/web/statics')
+web = Blueprint('web', __name__)
 
 
 from app.web import book
