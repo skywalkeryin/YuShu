@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Test</title>
-</head>
-<body>
+
+{% extends "layout.html" %}
+{% block content %}
    Hello World.
 
- {{data.name}} {{data.age}}
+ {{data.name | default('an')}} {{data.age}}
  {{ b.b }}
 {% if data.age < 18 %}
     <h1> {{data.name}}</h1>
@@ -23,6 +19,4 @@
     {{ key }} {{ value }}
 {% endfor %}
 
-
-</body>
-</html>
+{% endblock %}

@@ -20,6 +20,6 @@ app = create_app()
 
 # CONFIG is the child class of the dict, app.config['DEBUG'] flask 要求全大写
 if __name__ == '__main__':  # Only can execute in the entry point(入口文件)
-    app.run(host='0.0.0.0', debug=app.config['DEBUG'], port=81, threaded = True)
+    app.run(host='0.0.0.0', debug=app.config['DEBUG'], port=81)
 
 

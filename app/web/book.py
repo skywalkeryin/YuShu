@@ -17,7 +17,7 @@ class testObj:
 def test():
 
    r = {
-       'name' : 'yin',
+       'name' : '',
        'age' : 18
    }
 
