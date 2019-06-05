@@ -10,7 +10,7 @@ class YuShuBook:
     isbn_url = 'http://t.yushu.im/v2/book/isbn/{}'
     keyword_url = 'http://t.yushu.im/v2/book/search?q={}&count={}&start={}'
 
-    def __init(self):
+    def __init__(self):
         self.total = 0
         self.books = []
 
@@ -41,4 +41,8 @@ class YuShuBook:
 
     def caculate_start(self, page):
         return (page - 1) * current_app.config['PER_PAGE']
+
+    @property
+    def first(self):
+        return self.books[0] if self.total > 0 else None
 
