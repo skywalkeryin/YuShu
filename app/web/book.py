@@ -1,4 +1,4 @@
-from flask import request, jsonify, render_template
+from flask import request, jsonify, render_template, flash
 
 from app.forms.book import SearchForm
 from app.libs.helper import is_isbn_or_key
@@ -17,12 +17,14 @@ class testObj:
 def test():
 
    r = {
-       'name' : '',
-       'age' : 18
+       'name': '',
+       'age': 18
    }
 
    b = testObj()
    b.b = 3
+
+   flash("test flash")
 
    return  render_template('test.html', data = r, b = b)
 
