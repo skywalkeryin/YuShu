@@ -11,6 +11,8 @@ from flask import Blueprint
 # web = Blueprint('web', __name__, static_folder='statics', static_url_path='/web/statics')
 
 
+
+
 # BluePrint
 web = Blueprint('web', __name__)
 

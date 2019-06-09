@@ -7,7 +7,6 @@ from sqlalchemy import Column, Integer, String
 from app.models.base import Base
 
 
-
 class Book(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(50), nullable=False)
