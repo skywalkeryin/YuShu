@@ -29,7 +29,7 @@ def search():
             yushu_book.search_by_isbn(q)
             # result = BookViewModel.package_single(result, q)
         else:
-            yushu_book.search_by_keyword(q)
+            yushu_book.search_by_keyword(q, page)
             # result = BookViewModel.package_collection(result, q)
 
         books.fill(yushu_book, q)
@@ -37,7 +37,7 @@ def search():
     else:
         flash('Keyword is not correct. Please rekey in.')
         # return jsonify(form.errors)
-    return render_template('search_result.html', books = books)
+    return render_template('search_result.html', books=books)
 
 
 @web.route('/book/<isbn>/detail')
@@ -45,6 +45,6 @@ def book_detail(isbn):
     yushu_book = YuShuBook()
     yushu_book.search_by_isbn(isbn)
     book = BookViewModel(yushu_book.first)
-    return render_template('book_detail.html', book = book, gifts = [], wishes = [])
+    return render_template('book_detail.html', book=book, gifts=[], wishes=[])
 
 
