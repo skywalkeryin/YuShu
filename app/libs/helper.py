@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+from urllib.parse import urlparse, urljoin
+from flask import request, url_for
 
 __author__ = "skywalkeryin"
 
@@ -19,3 +20,13 @@ def is_isbn_or_key(q):
         isbn_or_key = 'isbn'
     return isbn_or_key
 
+
+def is_safe_url(next):
+
+    if not next.startswith('/'):
+        ref_url = urlparse(request.host_url)
+        test_url = urlparse(next)
+        return next and test_url.scheme in ('http', 'https') and \
+               ref_url.netloc == test_url.netloc
+    else:
+        return True

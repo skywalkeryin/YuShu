@@ -4,6 +4,7 @@ from app.forms.auth import RegisterForm, LoginForm
 from app.models.user import User
 from app.models.base import db
 from flask_login import login_user
+from app.libs.helper import is_safe_url
 
 
 __author__ = 'skywalker'
@@ -13,10 +14,10 @@ __author__ = 'skywalker'
 def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
-        user = User()
-        user.set_attrs(form.data)
-        db.session().add(user)
-        db.session.commit()
+        with db.auto_commit():
+            user = User()
+            user.set_attrs(form.data)
+            db.session().add(user)
         return redirect(url_for('web.login'))
     return render_template('auth/register.html', form=form)
 
@@ -28,6 +29,10 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
+            next = request.args.get('next')
+            if not is_safe_url(next):
+                next = url_for('web.index')
+            return redirect(next)
         else:
             flash('Invalid Login')
     return render_template('auth/login.html', form={'data': {}})
