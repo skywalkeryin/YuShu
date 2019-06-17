@@ -1,6 +1,8 @@
+
+
 from app.models.base import db
 from . import web
-from flask import  current_app, flash
+from flask import  current_app, flash, redirect, url_for
 from flask_login import login_required, current_user # It is a user instance
 from app.models.gift import Gift
 
@@ -27,6 +29,7 @@ def save_to_gifts(isbn):
             db.session.add(gift)
     else:
         flash('This book is already in your gift list or wish list')
+    return redirect(url_for('web.book_datai', isbn=isbn))
 
 
 @web.route('/gifts/<gid>/redraw')

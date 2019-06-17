@@ -22,8 +22,10 @@ def is_isbn_or_key(q):
 
 
 def is_safe_url(next):
-
-    if not next.startswith('/'):
+    if  not next:
+        return False
+    #next not null
+    if  not next.startswith('/'):
         ref_url = urlparse(request.host_url)
         test_url = urlparse(next)
         return next and test_url.scheme in ('http', 'https') and \
