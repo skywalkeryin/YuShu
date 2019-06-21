@@ -12,6 +12,10 @@ __author__ = 'skywalker'
 @web.route('/my/gifts')
 @login_required
 def my_gifts():
+    uid = current_user.id
+    gifts_of_mine = Gift.get_user_gifts(uid)
+    isbn_list = [gift.isbn for gift in gifts_of_mine]
+    Gift.get_wish_count(isbn_list)
     return 'My gifts'
 
 
@@ -29,7 +33,7 @@ def save_to_gifts(isbn):
             db.session.add(gift)
     else:
         flash('This book is already in your gift list or wish list')
-    return redirect(url_for('web.book_datai', isbn=isbn))
+    return redirect(url_for('web.book_datail', isbn=isbn))
 
 
 @web.route('/gifts/<gid>/redraw')
