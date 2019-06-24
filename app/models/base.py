@@ -22,6 +22,7 @@ class SQLAlchemy(_SQLAlchemy):
             self.session.rollback()
             raise e
 
+
 class Query(BaseQuery):
     def filter_by(self, **kwargs):
         if 'status' not in kwargs.keys():
@@ -29,7 +30,6 @@ class Query(BaseQuery):
         return super(Query,self).filter_by(**kwargs)
 
 db = SQLAlchemy(query_class=Query)
-
 
 
 class Base(db.Model):

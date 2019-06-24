@@ -5,12 +5,12 @@
  Author :'skywalkeryin'
  Date :  2019-06-05
 '''
-
+from flask import current_app
 from sqlalchemy import Column, Integer, String, Boolean, Float
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from app.libs.helper import is_isbn_or_key
-from app.models.base import Base
+from app.models.base import Base, db
 from flask_login import UserMixin
 from app import login_manager
 from app.models.gift import Gift
@@ -61,6 +61,25 @@ class User(UserMixin, Base):
         else:
             return False
 
+    def generate_token(self, expiration=600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def reset_password(token, new_password):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return False
+        uid = data.get('id')
+        with db.auto_commit():
+            user = User.query.get(uid)
+            if not user:
+                return False
+            else:
+                user.password = new_password
+        pass
 
 @login_manager.user_loader
 def get_user(uid):

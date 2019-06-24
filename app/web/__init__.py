@@ -1,6 +1,5 @@
 
-from flask import Blueprint
-
+from flask import Blueprint, render_template
 
 # Set up static file folder, need to set up static_folder(in the bluePrint, web folder here is the beginning, here using the relative path),
 # if you don't set up the static_url_path, it will use the tail
@@ -15,6 +14,12 @@ from flask import Blueprint
 
 # BluePrint
 web = Blueprint('web', __name__)
+
+
+@web.app_errorhandler(404)
+def Not_Found(e):
+    # AOP 思想
+    return render_template('404.html'), 404
 
 
 from app.web import book
