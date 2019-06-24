@@ -1,5 +1,5 @@
 from flask import request, jsonify, render_template, flash
-from flask_login import  current_user
+from flask_login import current_user
 from app.forms.book import SearchForm
 from app.libs.helper import is_isbn_or_key
 from app.models.gift import Gift
@@ -8,10 +8,8 @@ from app.spider.yushu_book import YuShuBook
 from app.view_models.Trade import TradeInfo
 from app.view_models.book import BookViewModel, BookCollection
 
-
-import json
-
 from . import web
+
 
 @web.route('/book/search')
 def search():
@@ -61,13 +59,11 @@ def book_detail(isbn):
         if Wish.query.filter_by(uid=current_user.id, isbn=isbn, launched=False).first():
             has_in_wishes = True
 
-
     trade_gifts = Gift.query.filter_by(isbn=isbn, launched=False).all()
     trade_wishes = Wish.query.filter_by(isbn=isbn, launched=False).all()
 
     trade_gifts_model = TradeInfo(trade_gifts)
     trade_wishes_model = TradeInfo(trade_wishes)
-
 
     return render_template('book_detail.html', book=book, gifts=trade_gifts_model, wishes=trade_wishes_model,
                            has_in_gifts = has_in_gifts, has_in_wishes=has_in_wishes)

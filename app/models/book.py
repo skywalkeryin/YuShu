@@ -1,6 +1,4 @@
 
-
-
 # sql alchemy
 
 from sqlalchemy import Column, Integer, String
