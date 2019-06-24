@@ -11,7 +11,6 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, desc, func
 from app.models.base import Base, db
 from sqlalchemy.orm import relationship
 
-
 from app.spider.yushu_book import YuShuBook
 
 
@@ -41,13 +40,16 @@ class Gift(Base):
         # db.session
         # 条件表达式 expression
         # mysql in
+        from app.models.wish import Wish  #Import here to fix the ciccular import
         count_list = db.session.query(Wish.isbn, func.count(Wish.id)).filter(
             Wish.launched == False, Wish.isbn.in_(isbn_list), Wish.status == 1).group_by(
             Wish.isbn).all()
-        # 返回对象 字典
         count_list = [{'isbn': count[0], 'count': count[1]} for count in count_list]
         return count_list
-
+        # 返回对象 字典
+        # return
+        #
+        # pass
 
     #对象代表一个礼物，具体
     #类代表礼物这一事物，它是抽象的， 不是具体的“一个”
@@ -59,7 +61,5 @@ class Gift(Base):
             Gift.isbn).order_by(
             desc(Gift.create_time)).limit(
             current_app.config['RECENT_BOOK_COUNT']).distinct().all()
-        return  recent_gift
+        return recent_gift
 
-
-from app.models.wish import Wish

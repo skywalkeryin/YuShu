@@ -46,11 +46,11 @@ class User(UserMixin, Base):
 
     def can_save_to_list(self, isbn):
         if is_isbn_or_key(isbn) != 'isbn':
-            return  False
+            return False
         yushu_book = YuShuBook()
         yushu_book.search_by_isbn(isbn)
         if not yushu_book.first:
-            return  False
+            return False
         # 不允许重复赠送同一本书
         # 不允许同一用户同时赠送以及索取同一本书
         gifting = Gift.query.filter_by(uid=self.id, isbn=isbn, launched=False).first()
@@ -60,8 +60,6 @@ class User(UserMixin, Base):
             return True
         else:
             return False
-
-
 
 
 @login_manager.user_loader

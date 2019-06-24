@@ -20,7 +20,6 @@ class Wish(Base):
     isbn = Column(String(15), nullable=False)
     launched = Column(Boolean, default=False)
 
-
     @classmethod
     def get_user_wishes(cls, uid):
         gifts = Wish.query.filter_by(uid=uid, launched=False).order_by(
@@ -34,6 +33,7 @@ class Wish(Base):
         # db.session
         # 条件表达式 expression
         # mysql in
+        from app.models.gift import Gift
         count_list = db.session.query(Wish.isbn, func.count(Gift.id)).filter(
             Gift.launched == False, Gift.isbn.in_(isbn_list), Gift.status == 1).group_by(
             Gift.isbn).all()
@@ -41,4 +41,3 @@ class Wish(Base):
         count_list = [{'isbn': count[0], 'count': count[1]} for count in count_list]
         return count_list
 
-from app.models.gift import Gift
