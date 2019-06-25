@@ -37,7 +37,7 @@ def login():
             return redirect(next)
         else:
             flash('Invalid Login')
-    return render_template('auth/login.html', form={'data': {}})
+    return render_template('auth/login.html', form=form)
 
 
 @web.route('/reset/password', methods=['GET', 'POST'])
@@ -50,7 +50,7 @@ def forget_password_request():
             from app.libs.email import send_mail
             send_mail(form.email.data, 'reset your password', 'email/reset_password.html', user=user,
                       token=user.generate_token())
-            pass
+            flash('An Email already sent to the ' + account_email + ', please check it.')
     return render_template('auth/forget_password_request.html', form=form)
 
 

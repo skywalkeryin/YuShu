@@ -79,7 +79,7 @@ class User(UserMixin, Base):
                 return False
             else:
                 user.password = new_password
-        pass
+        return True
 
 @login_manager.user_loader
 def get_user(uid):
