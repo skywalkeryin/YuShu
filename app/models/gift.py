@@ -21,6 +21,9 @@ class Gift(Base):
     isbn = Column(String(15), nullable=False)
     launched = Column(Boolean, default=False)
 
+    def is_yourself_gift(self, uid):
+        return uid == self.uid
+
     @property
     def book(self):
         yushu_book = YuShuBook()
