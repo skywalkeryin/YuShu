@@ -109,6 +109,8 @@ class User(UserMixin, Base):
             send_receive=str(self.send_counter) + '/' + str(self.receive_counter)
         )
 
+
+
 @login_manager.user_loader
 def get_user(uid):
     return User.query.get(int(uid))

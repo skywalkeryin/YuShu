@@ -29,6 +29,7 @@ class Query(BaseQuery):
             kwargs['status'] = 1
         return super(Query,self).filter_by(**kwargs)
 
+
 db = SQLAlchemy(query_class=Query)
 
 

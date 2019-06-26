@@ -11,6 +11,8 @@ flask-sqlalchemy = "*"
 cymysql = "*"
 flask-login = "*"
 flask-mail = "*"
+flask-migrate = "*"
+flask-script = "*"
 
 [dev-packages]
 
