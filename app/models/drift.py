@@ -1,7 +1,5 @@
 
 from sqlalchemy import Column, Integer, String, SmallInteger
-
-
 from app.models.base import Base
 
 

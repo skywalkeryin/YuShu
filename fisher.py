@@ -14,10 +14,10 @@
 
 from app import create_app
 
-from app.models.book import Book
-
 
 app = create_app()
+
+
 
 
 # CONFIG is the child class of the dict, app.config['DEBUG'] flask 要求全大写
