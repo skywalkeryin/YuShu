@@ -1,9 +1,14 @@
+from sqlalchemy import or_, desc
 
-
+from app.forms.book import DriftForm
+from app.libs.email import send_mail
+from app.models.base import db
+from app.models.drift import Drift
 from app.models.gift import Gift
+from app.view_models.book import BookViewModel
 from . import web
 from flask_login import login_required, current_user
-from flask import flash, redirect, url_for, render_template
+from flask import flash, redirect, url_for, render_template, request
 
 __author__ = 'skywalkeryin'
 
@@ -17,18 +22,31 @@ def send_drift(gid):
         flash('This book belong to you already, you can not ask yourself for this book.')
         return redirect(url_for('web.book_detail', isbn=current_gift.isbn))
 
-    can = current_user.can_send_gift
+    can = current_user.can_send_gift()
 
     if not can:
         return render_template('not_enough_beans.html', beans=current_user.beans)
 
-    donor = current_gift.user.summary
-    return render_template('drift.html', donor=donor)
+    form = DriftForm(request.form)
+    if request.method == 'POST' and form.validate():
+        save_drift(form, current_gift)
 
+        #send_mail()
+        # send_mail(current_gift.user.email, 'Someone ask for a book', 'email/get_gift.html', wisher=current_user,
+        #           gift=current_gift)
+        return redirect(url_for('web.pending'))
+
+    donor = current_gift.user.summary
+    return render_template('drift.html', donor=donor, user_beans=current_user.beans, form=form)
 
 
 @web.route('/pending')
+@login_required
 def pending():
+    drifts = Drift.query.filter(
+        or_(Drift.requester_id == current_user.id, Drift.donor_id == current_user.id)).order_by(
+        desc(Drift.create_time)
+    ).all()
     pass
 
 
@@ -44,4 +62,30 @@ def redraw_drift(did):
 
 @web.route('/drift/<int:did>/mailed')
 def mailed_drift(did):
+    pass
+
+
+def save_drift(drift_form, current_gift):
+    with db.auto_commit():
+        drift = Drift()
+        # drift.message = drift_form.message.data
+        drift_form.populate_obj(drift)
+
+        drift.requester_id = current_user.id
+        drift.requester_nickname = current_user.nickname
+
+        drift.gift_id = current_gift.id
+        drift.donor_id_id = current_gift.user.id
+        drift.donor_nickname = current_gift.user.nickname
+
+        book = BookViewModel(current_gift.book)
+
+        drift.book_title = book.title
+        drift.book_author = book.author
+        drift.book_img = book.img
+        drift.isbn = book.isbn
+
+        current_user.beans -= 1
+
+        db.session.add(drift)
     pass

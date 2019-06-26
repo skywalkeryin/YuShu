@@ -11,8 +11,8 @@ __author__ = '七月'
 
 @web.route('/')
 def index():
-    recent_gifts = Gift.recent();
-    books =  [BookViewModel(gift.book) for gift in recent_gifts]
+    recent_gifts = Gift.recent()
+    books = [BookViewModel(gift.book) for gift in recent_gifts]
     return render_template('index.html', recent=books)
 
 
