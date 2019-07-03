@@ -88,4 +88,3 @@ def save_drift(drift_form, current_gift):
         current_user.beans -= 1
 
         db.session.add(drift)
-    pass

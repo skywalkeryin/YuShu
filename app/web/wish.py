@@ -19,7 +19,6 @@ def my_wish():
 
     view_model = MyTrades(wishes_of_mine, gifts_count_list)
     return render_template('my_wish.html', wishes=view_model.trades)
-    return 'My gifts'
 
 
 @web.route('/wish/book/<isbn>')
