@@ -43,7 +43,7 @@ class User(UserMixin, Base):
     def password(self, raw):
         self._password = generate_password_hash(raw)
 
-    def can_send_gift(self):
+    def can_send_drift(self):
         # beans must greater than 1
         if self.beans < 1:
             return False

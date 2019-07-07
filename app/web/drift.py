@@ -2,10 +2,14 @@ from sqlalchemy import or_, desc
 
 from app.forms.book import DriftForm
 from app.libs.email import send_mail
+from app.libs.enums import PendingStatus
 from app.models.base import db
 from app.models.drift import Drift
 from app.models.gift import Gift
+from app.models.user import User
+from app.models.wish import Wish
 from app.view_models.book import BookViewModel
+from app.view_models.drift import DriftCollection
 from . import web
 from flask_login import login_required, current_user
 from flask import flash, redirect, url_for, render_template, request
@@ -22,7 +26,7 @@ def send_drift(gid):
         flash('This book belong to you already, you can not ask yourself for this book.')
         return redirect(url_for('web.book_detail', isbn=current_gift.isbn))
 
-    can = current_user.can_send_gift()
+    can = current_user.can_send_drift()
 
     if not can:
         return render_template('not_enough_beans.html', beans=current_user.beans)
@@ -44,25 +48,52 @@ def send_drift(gid):
 @login_required
 def pending():
     drifts = Drift.query.filter(
-        or_(Drift.requester_id == current_user.id, Drift.donor_id == current_user.id)).order_by(
+        or_(Drift.requester_id == current_user.id, Drift.donor_id == current_user.id), Drift.status == 1).order_by(
         desc(Drift.create_time)
     ).all()
-    pass
+
+    views = DriftCollection(drifts, current_user.id)
+    return render_template('pending.html', drifts=views.data)
 
 
 @web.route('/drift/<int:did>/reject')
 def reject_drift(did):
-    pass
+    with db.auto_commit():
+        drift = Drift.query.filter(Gift.uid == current_user.id,
+                                   Drift.id == did, Drift.status == 1).first_or_404()
+        drift.pending = PendingStatus.Reject  # setter here
+        requester = User.query.get_or_404(drift.requester_id)
+        requester.beans += 1
+    return redirect(url_for('web.pending'))
 
 
 @web.route('/drift/<int:did>/redraw')
+@login_required
 def redraw_drift(did):
-    pass
+    #超权
+
+    with db.auto_commit():
+        drift = Drift.query.filter_by(id=did, requester_id=current_user.id).first_or_404()
+        drift.pending = PendingStatus.Withdrawal  # setter here
+        current_user.beans += 1
+    return redirect(url_for('web.pending'))
 
 
 @web.route('/drift/<int:did>/mailed')
 def mailed_drift(did):
-    pass
+    with db.auto_commit():
+        drift = Drift.query.filter_by(
+            donor_id=current_user.id, id=did).first_or_404()
+        drift.pending = PendingStatus.Success
+        current_user.beans += 1
+        gift = Gift.query.filter_by(id=drift.gift_id).first_or_404()
+        gift.launched = True
+
+        #  A  Wish
+        #  A  Drift
+        Wish.query.filter_by(isbn=drift.isbn, uid=drift.requester_id,
+                             launched=False).update({Wish.launched: True})
+    return redirect(url_for('web.pending'))
 
 
 def save_drift(drift_form, current_gift):
