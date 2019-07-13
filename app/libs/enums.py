@@ -2,7 +2,7 @@
 
 __author__ = 'skywalker'
 
-from enum import  Enum
+from enum import Enum
 
 
 class PendingStatus(Enum):

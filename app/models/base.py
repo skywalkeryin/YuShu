@@ -53,3 +53,6 @@ class Base(db.Model):
         else:
             return None
 
+    def delete(self):
+        self.status = 0
+
